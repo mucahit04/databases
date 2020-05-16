@@ -1,0 +1,64 @@
++-----------+---------------+----------------+-----------+-------------+------------+-------------------+-----------+------------------+
+| member_id | member_name   | member_address | dinner_id | dinner_date | venue_code | venue_description | food_code | food_description |
++-----------+---------------+----------------+-----------+-------------+------------+-------------------+-----------+------------------+
+|         1 | Amit          | 325 Max park   | D00001001 | 2020-03-15  | B01        | Grand Ball Room   | C1, C2    | Curry, Cake      |
+|         2 | Ben           | 24 Hudson lane | D00001002 | 2020-03-15  | B02        | Zoku Roof Top     | S1, C2    | Soup, Cake       |
+|         3 | Cristina      | 516 6th Ave    | D00001002 | 2020-03-15  | B02        | Zoku Roof Top     | S1, C2    | Soup, Cake       |
+|         4 | Dan           | 89 John St     | D00001003 | 2020-03-20  | B03        | Goat Farm         | P1, T1, M1| Pie, Tea, Mousse |
+|         5 | Ema           | 91 Pixar St    | D00001003 | 2020-03-20  | B03        | Goat Farm         | P1, T1, M1| Pie, Tea, Mousse |
+|         6 | Fatima        | 56 8th Ave     | D00001004 | 2020-03-20  | B04        | Mama's Kitchen    | F1, M1    | Falafal, Mousse  |
+|         7 | Gabor         | 54 Vivaldi St  | D00001005 | 2020-02-20  | B05        | Hungry Hungary    | G1, P2    | Goulash, Pasca   |
+|         8 | Hema          | 9 Peter St     | D00001003 | 2020-03-20  | B03        | Goat Farm         | P1, T1, M1| Pie, Tea, Mousse |
++-----------+---------------+----------------+-----------+-------------+------------+-------------------+-----------+------------------+
+
+1- How can you convert the table into 1NF ?
+
+Violation : "having atomic/single valued columns"
+
+Solution: We need to update the columns "food_code" and "food_description" so they will have single value. This can be done either
+separating the food_code and food_description into separate columns or add the values repeatedly for each member.
+<----------------------->
+
+2- What are the super, candidate, primary keys ?
+
+Super Key1 = member_id + member_name + member_address + food_code
+Super Key2 = member_id + member_address+ dinner_date
+
+Candidate Key1 = member_id
+Candidate Key2 = member_id + member_name
+Candidate Key3 = member_id + member_address
+Candidate Key4 = member_name + member_address
+
+Primary Key = member_id + food_code
+<----------------------->
+
+3- What are the potential relationships between different possible tables ?
+
+Say the given table is "Reservations" table. It may have relations with:
+
+------> "Members" table => (member_id, member_name, member_address)
+
+------> "Venues" table => (venue_code, venue_description, venue_address)
+
+------> "Menu" table => (food_code, food_description)
+
+------> "Dinners" table => (dinner_id, dinner_date)
+
+<----------------------->
+
+
+4- How can you develop the set of 2NF tables?
+Violation: The table has a partial dependency (food_description depends on food_code out of the table's primary key)
+
+We can divide the "reservations" table to store the food_code, food_descriptions in menu table, 
+so there will be no "partial dependency" to the primary key of "reservations" table.
+<----------------------->
+
+
+5- How can you develop the set of 3NF tables?
+Violation: There are transitive dependencies;
+
+    --- "dinner_date" depends on "dinner_id" which is a non-key column 
+    --- "venue_description" depends on "venue_code" which is a non-key column
+
+Solution: If the tables are divided like in Question 3 above, then the table will be valid for the 3NF.
