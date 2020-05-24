@@ -4,36 +4,29 @@ const accounts = require("./account_data");
 const transfers = require("./account_changes_data");
 
 var connection = mysql.createConnection({
-  host: "localhost",
-  user: "hyfuser",
-  password: "hyfpassword",
-  database: "myBank",
+	host: "localhost",
+	user: "hyfuser",
+	password: "hyfpassword",
+	database: "myBank",
 });
 
-const execQuery = util.promisify(
-  connection.query.bind(connection)
-);
+const execQuery = util.promisify(connection.query.bind(connection));
 connection.connect();
 
 async function insertData() {
-  try {
-    accounts.forEach(async (data) => {
-      await execQuery(
-        "INSERT INTO account SET ?",
-        data
-      );
+	try {
+		const promoiesAccounts = accounts.forEach( data => {
+			 execQuery("INSERT INTO account SET ?", data);
+		});
+		const promisesChanges = transfers.forEach( data => {
+			 execQuery("INSERT INTO AccountChanges SET ?", data);
     });
-    transfers.forEach(async (data) => {
-      await execQuery(
-        "INSERT INTO AccountChanges SET ?",
-        data
-      );
-    });
-  } catch (error) {
-    console.log(error);
-    connection.end();
-  }
-  connection.end();
+    await Promise.all[promoiesAccounts, promisesChanges]
+	} catch (error) {
+		console.log(error);
+		connection.end();
+	}
+	connection.end();
 }
 
 insertData();
